@@ -1,5 +1,7 @@
 from socket import *
 import time
+import threading
+import functions
 
 menu1 = 'sdkljfhds'                                     #variable for the first menu
 user_Id = 'a'                                           #user id
@@ -8,6 +10,29 @@ HELLO = user_Id                                         #used this to make it mo
 serverName = gethostbyname("localhost")
 serverPort = 12000                                      #100% arbitrary
 receivedPort = 0
+
+class receiving(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+
+    def run(self):
+
+        while 1:
+            output = clientSocket.recv(1024)
+            print output + '\n'
+
+
+
+class sending(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+
+    def run(self):
+        while 1:
+            togo = raw_input()
+            print togo
+            clientSocket.send(togo)
+
 
 
 
@@ -31,9 +56,15 @@ if confirmation != "CONNECTED":
 
 time.sleep(1)                                           #again, it only works after a slight delay
 
-while 1:                                                #runs forever
-    clientSocket.send(raw_input())                     #gets input from keyboard
-    print 'server: ' + clientSocket.recv(1024)         #prints what the thread running "__outer__thread__ is sending
+tosend = sending()
+tosend.start()
+toreceive = receiving()
+toreceive.start()
+
+
+#while 1:                                                #runs forever
+#    clientSocket.send(raw_input())                     #gets input from keyboard
+#    print 'server: ' + clientSocket.recv(1024)         #prints what the thread running "__outer__thread__ is sending
 
 
 

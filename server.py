@@ -59,31 +59,30 @@ class IndividualTask(threading.Thread):
         self.sock = sock
     def run(self):
 
-        localstring.append(G[0])
+        localstring.append('flks;ddksj')
 
         while 1:
             destinationUser = 'z'
 
-
-            # localstring[self.iterator] = self.sock.recv(1024)                        # receive line from client
-            G[0] = self.sock.recv(1024)
-            #print localstring[self.iterator]
+            print socket.getsockname(self.sock)
+            localstring[self.iterator] = self.sock.recv(1024)                        # receive line from client
+            #G[0] = self.sock.recv(1024)
+            print localstring[self.iterator]
 
 
             destinationUser = localstring[self.iterator]
-            if G[0] == 'CHAT':
-            #if destinationUser in online:
+            #if G[0] == 'CHAT':
+            if destinationUser in online:
                 print "entered chat"
                 self.sock.send("Client %s is available for a chat session" % (destinationUser))
 
 
                 while localstring[self.iterator] != "exit chat":                # while the user doesn't end the chat...
-                    if localstring[self.iterator] != G[0]: self.sock.send(G[0])
 
+                    print 'I got here'
                     localstring[self.iterator] = self.sock.recv(1024)                # receive line from client
-                    lock1.acquire()
-                    G[0] = localstring[self.iterator]
-                    lock1.release()
+                    print 'but not here'
+                    self.sock.sendall(localstring[self.iterator] + 'dlkfsjfdls;kfj')
 
 
                     #self.sock.send(fromClient)  # send line to other end
