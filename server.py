@@ -6,11 +6,11 @@ import threading
 
 global G
 G = ['', '', '', '', '']                                    #my idea was for every chat to use a global string that can be changed by both end points
-sessions = []
-count = 0
+sessions = []                                               #array for each active chat
+count = 0                                                   #counts how many threads/users have connected so far
 serverPort = 12000
-localstring = []
-lock1 = threading.Lock()
+localstring = []                                            #array of string that is used by each thread
+lock1 = threading.Lock()                                    #lock object 
 
 
 
