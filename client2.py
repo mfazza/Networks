@@ -30,7 +30,7 @@ class sending(threading.Thread):
     def run(self):
         while 1:
             togo = raw_input()
-            print togo
+            #print togo
             clientSocket.send(togo)
 
 

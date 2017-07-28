@@ -4,14 +4,16 @@ import thread
 import time
 import threading
 
-global G
-G = ['', '', '', '', '']                                    #my idea was for every chat to use a global string that can be changed by both end points
+
 sessions = []                                               #array for each active chat
 count = 0                                                   #counts how many threads/users have connected so far
 serverPort = 12000
 localstring = []                                            #array of string that is used by each thread
-lock1 = threading.Lock()                                    #lock object 
-
+#creates hashmap of sockets
+users = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']
+sockets = {}
+for x in range (0, 9):
+    sockets[users[x]] = socket(AF_INET, SOCK_STREAM)
 
 
 serverSocket = socket(AF_INET, SOCK_STREAM)                 #creates socket and on the next line, binds it to a port
@@ -22,41 +24,47 @@ print "The server is ready to receive"
 
 class BackgroundTask(threading.Thread):
 
-    def __init__(self, iterator):
+    def __init__(self, i):
         threading.Thread.__init__(self)
-        self.iterator = iterator
+        self.i = i
 
 
     def run(self):
         while 1:
             conn, addr = serverSocket.accept()  # Will indefinitely accept data from clients
-            newuser = conn.recv(1024)  # receive (buffer size of 1024 bytes)
-            validation = validate(newuser)  # It checks the userID for validation
+            newuser = conn.recv(1024)           # receive (buffer size of 1024 bytes)
+            validation = validate(newuser)      # It checks the userID for validation
+            sockets[newuser] = conn             #passes object to dictionary 'a': socket
 
             # validation part
             if validation == True:  #if user connects successfully they receive a port number and new thread is created
+
+
                 conn.send('CONNECTED')
                 print 'User ' + newuser + " has connected to the server"
+
+
 
                 print 'this is the ' + newuser
                 go_online(newuser)
                 print online
 
-                sessions.append(IndividualTask(self.iterator, conn))
-                sessions[self.iterator].start()
+                sessions.append(IndividualTask(newuser, self.i))
+                sessions[self.i].start()
 
                 print threading.enumerate()
 
-                self.iterator += 1  # updates count
+                self.i += 1  # updates count
 
             else:
                 conn.send("DECLINED\n")
 
 class IndividualTask(threading.Thread):
-    def __init__(self, iterator, sock):
+    def __init__(self, owner, iterator):
         threading.Thread.__init__(self)
         self.iterator = iterator
-        self.sock = sock
+        self.owner = owner
+        #self.sock = sock
     def run(self):
 
         localstring.append('flks;ddksj')
@@ -64,8 +72,8 @@ class IndividualTask(threading.Thread):
         while 1:
             destinationUser = 'z'
 
-            print socket.getsockname(self.sock)
-            localstring[self.iterator] = self.sock.recv(1024)                        # receive line from client
+
+            localstring[self.iterator] = sockets[self.owner].recv(1024)                        # receive line from client
             #G[0] = self.sock.recv(1024)
             print localstring[self.iterator]
 
@@ -74,21 +82,19 @@ class IndividualTask(threading.Thread):
             #if G[0] == 'CHAT':
             if destinationUser in online:
                 print "entered chat"
-                self.sock.send("Client %s is available for a chat session" % (destinationUser))
+                sockets[self.owner].send("Client %s is available for a chat session" % (destinationUser))
 
 
                 while localstring[self.iterator] != "exit chat":                # while the user doesn't end the chat...
 
-                    print 'I got here'
-                    localstring[self.iterator] = self.sock.recv(1024)                # receive line from client
-                    print 'but not here'
-                    self.sock.sendall(localstring[self.iterator] + 'dlkfsjfdls;kfj')
+                    localstring[self.iterator] = sockets[self.owner].recv(1024)                # receive line from client
+                    sockets[destinationUser].send(localstring[self.iterator])
 
 
                     #self.sock.send(fromClient)  # send line to other end
                     # write line to file
             else:
-                self.sock.send("b not available")  # or else, print this and
+                sockets[self.owner].send("b not available")  # or else, print this and
 
 
 BackgroundTask(count).start()
