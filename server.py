@@ -1,5 +1,5 @@
 from socket import *
-from Functions import *
+from functions import *
 import thread
 import time
 import threading
