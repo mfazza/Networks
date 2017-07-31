@@ -8,12 +8,8 @@ userid = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']
 protocol = {1: 'HELLO', 2: 'CONNECTED', 3: 'CHAT_REQUEST', 4: 'CHAT_STARTED', 5: 'UNREACHABLE', 6: 'END_REQUEST',
             7: 'END_NOTIF', 8: 'CHAT', 9: 'HIST_REQ', 10: 'HIST_RESP'}
 
-
-online = []
-
-global G
-G = ['', '', '', '', '']
-
+testtest = {}
+online = {}
 serverName = gethostname()
 
 
@@ -27,14 +23,15 @@ def validate(x):
     return isValid
 
 def get_chat_id():
-    return random.randint(1, 100)
+    return random.randint(1000, 9999)
 
 def go_online(x):  # needs validation
-    online.append(x)
+    online[x] = 0
 
-
-
-
+def create_chat(x, y):
+    chatid = get_chat_id()
+    online[x] = chatid
+    online[y] = chatid
 
 
 
@@ -83,10 +80,26 @@ def updateHistory(history, sessionID, nameOfClient, message):
     #         loop = False
 
 
-# print idport
-# go_online('a')
-# print idport
-# print online
 
-#go_offline('a')
-#print idport
+
+
+# def string_checker(str):
+#     if protocol[3] in str:
+#         #do the parsing
+#     elif protocol[6] in str:
+#         #do the parsing
+#     elif protocol[]
+#
+
+
+
+
+
+#if localstring[self.iterator] == protocol[3]:
+    #check to see if client is available
+    #if client is available:
+        # send a protocol[4]
+        #while localstring[self.iterator] != protocol[6]:
+        #localstring[self.iterator] = sockets[self.owner].recv(1024)  # receive line from client
+        #sockets[destinationUser].send(localstring[self.iterator])
+    #else
