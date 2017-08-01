@@ -85,4 +85,34 @@ class IndividualTask(threading.Thread):
                 sockets[self.owner].send("b not available")  # or else, print this and
 
 
+
+
+# while 1:
+#     localstring[self.iterator] = sockets[self.owner].recv(1024)
+#
+#     if protocol[3] in localstring[self.iterator]:
+#         #gets user from CHAT_REQUEST-A-B
+#         #checks if users are engaged in a chat already
+#         #if so
+#             #sockets[self.iterator].send(protocol[5]) '''unreachable
+#         #ifnot
+#             #create_chat(self.owner, destinationUser)
+#             #send to both users that a chat has started (also sends session number)
+#
+#     elif protocol[6] in localstring[self.iterator]:
+#         #gets the session ID from the END_REQUEST####
+#         #modifies online['client1'] and online['client2' to 0
+#         #send ENDNOTIF to both client1 and client2
+#
+#     elif protocol[8] in localstring[self.iterator]:
+#         #checks to see if owner is in chat
+#         #reads the four characters after CHAT to determine the session number
+#         #uses chat session number to assign owner
+#         #writes string to file
+#         #sockets[destinationUser].send(localstring[self.iterator])
+#
+#     elif protocol[9] in localstring[self.iterator]:
+#         #gets sessionid from HIST_REQclient1client2
+
+
 BackgroundTask(count).start()
