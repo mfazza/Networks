@@ -6,7 +6,7 @@ it = 0
 userid = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']
 
 protocol = {1: 'HELLO', 2: 'CONNECTED', 3: 'CHAT_REQUEST', 4: 'CHAT_STARTED', 5: 'UNREACHABLE', 6: 'END_REQUEST',
-            7: 'END_NOTIF', 8: 'CHAT', 9: 'HIST_REQ', 10: 'HIST_RESP'}
+            7: 'END_NOTIF', 8: 'CHAT', 9: 'HIST_REQ', 10: 'HIST_RESP', 11: 'log out'}
 
 testtest = {}
 online = {}
@@ -92,10 +92,49 @@ def updateHistory(history, sessionID, nameOfClient, message):
 #
 
 
+# while 1:
+#     localstring[self.iterator] = sockets[self.owner].recv(1024)
+#
+#     if protocol[3] in localstring[self.iterator]:
+#         #gets user from CHAT_REQUEST-A-B
+#         #checks if users are engaged in a chat already
+#         #if so
+#             #sockets[self.iterator].send(protocol[5]) '''unreachable
+#         #ifnot
+#             #create_chat(self.owner, destinationUser)
+#             #send to both users that a chat has started (also sends session number)
+#
+#     elif protocol[6] in localstring[self.iterator]:
+#         #gets the session ID from the END_REQUEST####
+#         #modifies online['client1'] and online['client2' to 0
+#         #send ENDNOTIF to both client1 and client2
+#
+#     elif protocol[8] in localstring[self.iterator]:
+#         #checks to see if owner is in chat
+#         #reads the four characters after CHAT to determine the session number
+#         #uses chat session number to assign owner
+#         #writes string to file
+#         #sockets[destinationUser].send(localstring[self.iterator])
+#
+#     elif protocol[9] in localstring[self.iterator]:
+#         #gets sessionid from HIST_REQclient1client2
 
 
 
-#if localstring[self.iterator] == protocol[3]:
+
+str = 'CHAT_REQUEST-666'
+#if protocol[1] or protocol[3] or protocol[6] or protocol[9] in str:
+if any(x in str for x in protocol.values()):
+    print "found one - do nothing"
+else:
+    print "append CHAT + ID"
+
+str2 = int(str[13:16])
+print str2
+
+
+
+    #if localstring[self.iterator] == protocol[3]:
     #check to see if client is available
     #if client is available:
         # send a protocol[4]
@@ -103,3 +142,6 @@ def updateHistory(history, sessionID, nameOfClient, message):
         #localstring[self.iterator] = sockets[self.owner].recv(1024)  # receive line from client
         #sockets[destinationUser].send(localstring[self.iterator])
     #else
+
+
+
