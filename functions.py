@@ -6,9 +6,8 @@ it = 0
 userid = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']
 
 protocol = {1: 'HELLO', 2: 'CONNECTED', 3: 'CHAT_REQUEST', 4: 'CHAT_STARTED', 5: 'UNREACHABLE', 6: 'END_REQUEST',
-            7: 'END_NOTIF', 8: 'CHAT', 9: 'HIST_REQ', 10: 'HIST_RESP', 11: 'log out'}
+            7: 'END_NOTIF', 8: 'TALK', 9: 'HIST_REQ', 10: 'HIST_RESP', 11: 'log out'}
 
-testtest = {}
 online = {}
 serverName = gethostname()
 
@@ -17,7 +16,6 @@ def validate(x):
     "Checks to see if user has a valid id matching the ones on the list"
     isvalid = False
     if x in userid:
-    #f idport.has_key(x):
         if x not in online:
             isValid = True
     return isValid
@@ -122,16 +120,37 @@ def updateHistory(history, sessionID, nameOfClient, message):
 
 
 
-str = 'CHAT_REQUEST-666'
-#if protocol[1] or protocol[3] or protocol[6] or protocol[9] in str:
-if any(x in str for x in protocol.values()):
-    print "found one - do nothing"
-else:
-    print "append CHAT + ID"
+# str = 'CHAT_REQUEST-666'
+# #if protocol[1] or protocol[3] or protocol[6] or protocol[9] in str:
+# if any(x in str for x in protocol.values()):
+#     print "found one - do nothing"
+# else:
+#     print "append CHAT + ID"
+#
+# str2 = int(str[13:16])
+# print str2
+#
+# dict = {}
+# dict['a'] = 555
+# dict['b'] = 555
+#
+# print dict
+#
+# print dict.keys()
+# print dict.values()
+#
+# print "enter loop"
+# for key in dict.keys():
+#     if dict[key] == 555 and key != 'a':
+#         print key + "\n"
+#
+# strstr = 'CHAT(666)Hello client B'
+# print strstr[9:]
+#
+# name = "CHAT_REQUEST(A-B)"
+# print name[13]
 
-str2 = int(str[13:16])
-print str2
-
+#print list(dict.keys())[list(dict.values()).index(500)]
 
 
     #if localstring[self.iterator] == protocol[3]:
@@ -144,4 +163,5 @@ print str2
     #else
 
 
-
+# str = "CHAT_STARTED(9999-a-b)"
+# print str[13:17]
