@@ -1,12 +1,14 @@
 from socket import *
 import time
 import threading
-import functions
+from functions import *
 
+global currentChat
+currentChat = 77
 menu1 = 'sdkljfhds'                                     #variable for the first menu
 user_Id = 'a'                                           #user id
 HELLO = user_Id                                         #used this to make it more relatable to the project guideline
-#serverName = gethostname()                              #gets the name of the host (which is interface dependent)
+#serverName = gethostname()                             #gets the name of the host (which is interface dependent)
 serverName = gethostbyname("localhost")
 serverPort = 12000                                      #100% arbitrary
 receivedPort = 0
@@ -19,8 +21,11 @@ class receiving(threading.Thread):
 
         while 1:
             output = clientSocket.recv(1024)
-            print output + '\n'
 
+            if protocol[4] in output:
+                currentChat = output[13:17]
+
+            print output + '\n'
 
 
 class sending(threading.Thread):
@@ -29,9 +34,12 @@ class sending(threading.Thread):
 
     def run(self):
         while 1:
-            togo = raw_input()
-            #print togo
-            clientSocket.send(togo)
+            togo = raw_input() #368911
+            #if protocol[3] and protocol[6] and protocol[8] and protocol[9] and protocol[11] not in togo:
+            if any(x not in togo for x in protocol.values()):
+                clientSocket.send(protocol[8] + "(" + str(currentChat) + ")" + togo)
+            else:
+                clientSocket.send(togo)
 
 
 
