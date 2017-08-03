@@ -65,54 +65,60 @@ class IndividualTask(threading.Thread):
     def run(self):
 
         localstring.append('flks;ddksj')
+        destinationUser = 'z'
 
         while 1:
-            destinationUser = 'z'
 
-            localstring[self.iterator] = sockets[self.owner].recv(1024)                        #receive line from client
-            destinationUser = localstring[self.iterator]
+            localstring[self.iterator] = sockets[self.owner].recv(1024)
+            print localstring[self.iterator]
 
-            if destinationUser in online.keys() and online[self.owner] == 0 and online[destinationUser] == 0:
-                create_chat(self.owner, destinationUser)
-                sockets[self.owner].send("Client %s is available for a chat session" % (destinationUser))
+            if protocol[3] in localstring[self.iterator]:
+                if localstring[self.iterator][13] != self.owner:
+                    break
 
-                while localstring[self.iterator] != "exit chat":                               #while the user doesn't end the chat...
+                destinationUser = localstring[self.iterator][15]
+                print destinationUser
+                if destinationUser not in online.keys():
+                    sockets[self.iterator].send(protocol[5]) #unreachable
+                    break
+                elif online[self.owner] or online[destinationUser] != 0:
+                    sockets[self.iterator].send(protocol[5])  # unreachable
+                    break
+                else:
+                    create_chat(self.owner, destinationUser)
+                    chatnumber = online[self.owner]
+                    sockets[self.owner].send(protocol[4] + "(" + str(chatnumber) + "-" + self.owner + "-" + destinationUser + ")")
+                    sockets[destinationUser].send(protocol[4] + "(" + str(chatnumber) + "-" + self.owner + "-" + destinationUser + ")")
 
-                    localstring[self.iterator] = sockets[self.owner].recv(1024)                #receive line from client
-                    sockets[destinationUser].send(localstring[self.iterator])
+            elif protocol[6] in localstring[self.iterator]:
 
-            else:
-                sockets[self.owner].send("b not available")  # or else, print this and
+                IDDD = int(str[12:16])
+                for key in online.keys():
+                    if online[key] == IDDD:
+                        sockets[key].send(protocol[7] + IDDD)
+
+                for key in online.keys():
+                    if online[key] == IDDD:
+                        online[key] = 0
+
+            elif protocol[8] in localstring[self.iterator]:
+                destuser = 'x'
+                sessionid = int(localstring[self.iterator][5:9])
+                print sessionid
+                print online
+                if sessionid in online.values():
+                    for key in online.keys():
+                        if online[key] == sessionid and key != self.owner:
+                            print key
+                            destuser = key
+
+                            #writes string to file
+                sockets[destuser].send(localstring[self.iterator][10:])
+
+        #elif protocol[9] in localstring[self.iterator]:
+            #gets sessionid from HIST_REQclient1client2
 
 
-
-
-# while 1:
-#     localstring[self.iterator] = sockets[self.owner].recv(1024)
-#
-#     if protocol[3] in localstring[self.iterator]:
-#         #gets user from CHAT_REQUEST-A-B
-#         #checks if users are engaged in a chat already
-#         #if so
-#             #sockets[self.iterator].send(protocol[5]) '''unreachable
-#         #ifnot
-#             #create_chat(self.owner, destinationUser)
-#             #send to both users that a chat has started (also sends session number)
-#
-#     elif protocol[6] in localstring[self.iterator]:
-#         #gets the session ID from the END_REQUEST####
-#         #modifies online['client1'] and online['client2' to 0
-#         #send ENDNOTIF to both client1 and client2
-#
-#     elif protocol[8] in localstring[self.iterator]:
-#         #checks to see if owner is in chat
-#         #reads the four characters after CHAT to determine the session number
-#         #uses chat session number to assign owner
-#         #writes string to file
-#         #sockets[destinationUser].send(localstring[self.iterator])
-#
-#     elif protocol[9] in localstring[self.iterator]:
-#         #gets sessionid from HIST_REQclient1client2
 
 
 BackgroundTask(count).start()
