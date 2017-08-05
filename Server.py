@@ -9,7 +9,7 @@
 
 
 from socket import *
-from functions import *
+from Functions import *
 import thread
 import time
 import threading
