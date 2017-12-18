@@ -6,9 +6,12 @@
 
 
 from socket import *
+from Feistel import *
 import time
 import threading
 from Functions import *
+import string
+
 
 
 menu1 = 'sdkljfhds'                                     #variable for the first menu
@@ -17,6 +20,12 @@ user_Id = '9'                                           #user id
 serverName = gethostbyname("localhost")
 serverPort = 12000                                      #hard coded port
 receivedPort = 0
+
+# Security Addition
+# eKey = random.choice(string.letters)
+# print eKey
+eKey = "z"
+
 
 #protocol = {1: 'HELLO', 2: 'CONNECTED', 3: 'CHAT_REQUEST', 4: 'CHAT_STARTED', 5: 'UNREACHABLE', 6: 'END_REQUEST',
  #           7: 'END_NOTIF', 8: 'TALK', 9: 'HISTORY_REQ', 10: 'HISTORY_RESP', 11: 'log out', 12: 'SNUM', 13: 'HELP'}
@@ -43,8 +52,11 @@ class receiving(threading.Thread):
             elif protocol[7] in output:
                 currentChat = 77
                 print "Chat ended"
+            elif protocol[11] in output:
+                self._Thread__stop()
             else:
-                print output + '\n'
+                decrypt = feistelAtWork(output, eKey, "d")
+                print "CHAT: " + decrypt
 
 
 class sending(threading.Thread):                        #overrides threading.Thread's __init__ and run functions
@@ -67,7 +79,8 @@ class sending(threading.Thread):                        #overrides threading.Thr
                 if togo[12:16] == currentChat:
                     clientSocket.send(togo)
             elif protocol[8] in togo:                   #if TALK is a substring of what the user typed
-                clientSocket.send(protocol[8] + "(" + str(currentChat) + ")" + togo)
+                eMessage = feistelAtWork(togo, eKey, "e")
+                clientSocket.send(protocol[8] + "(" + str(currentChat) + ")" + eMessage )
             elif protocol[9] in togo:                   #if HISTORY_REQ is a substring of what the user typed
                 clientSocket.send(togo)
             elif protocol[11] in togo:                  #if user types 'log out'
@@ -75,6 +88,7 @@ class sending(threading.Thread):                        #overrides threading.Thr
                 clientSocket.send(togo)                 #sends 'log out' to server
                 clientSocket.close()                    #closes socket
                 powerbutton = False                     #turns of threads in the client process
+                self._Thread__stop()
                 break
             elif protocol[12] in togo:                  #if SNUM is a substring of what the user typed
                 print "Current chat session ID: " + currentChat #returns the chat id number
@@ -82,7 +96,8 @@ class sending(threading.Thread):                        #overrides threading.Thr
                 gethelp()
             else:
                 if currentChat != 77:                   #all other cases + user in chat, sends string to server
-                    clientSocket.send(protocol[8] + "(" + str(currentChat) + ")" + togo)
+                    eMessage = feistelAtWork(togo, eKey, "e")
+                    clientSocket.send(protocol[8] + "(" + str(currentChat) + ")" + eMessage)
 
 
 

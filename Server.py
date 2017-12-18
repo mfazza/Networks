@@ -120,10 +120,13 @@ class IndividualTask(threading.Thread):                     #overrides __init__ 
                 if sessionid in online.values():                        #if session id that came in the protocol exists
                     for key in online.keys():                           #find the users associated with that session id
                         if online[key] == sessionid and key != self.owner:
-                            print key
+
                             destuser = key                              #finds the actual destination user
                             #writes string to file
                 sockets[destuser].send(localstring[self.iterator][10:]) #sends string to the right user
+
+                print "from " + self.owner + ": " + localstring[self.iterator][10:]
+
                                                                         #then writes to each user's file
                 createChatHistory(self.owner, destuser, sessionid, self.owner, localstring[self.iterator][10:])
                 createChatHistory(destuser, self.owner, sessionid, self.owner, localstring[self.iterator][10:])
@@ -138,6 +141,7 @@ class IndividualTask(threading.Thread):                     #overrides __init__ 
 
             #if protocol = 'log out'
             elif protocol[11] in localstring[self.iterator]:
+                sockets[self.owner].send(protocol[11])
                 sockets[self.owner].close()                             #closes socket
                 del online[self.owner]                                  #Makes the user offline
                 break                                                   #breaks from "while 1:" so thread can end
